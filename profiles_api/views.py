@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
-
+from rest_framework import filters
 from profiles_api import serializers
 from profiles_api import models
 from profiles_api import permissions
@@ -107,3 +107,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = models.UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,) #, is to create a tuple instead of single item
     permission_classes = (permissions.UpdateOwnProfile,)
+    #Add filter backend for search filter
+    filter_backends = (filters.SearchFilter,)
+    #Django will allow us search only by name and email fields
+    search_fields = ('name', 'email',)
