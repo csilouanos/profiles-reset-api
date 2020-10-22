@@ -7,6 +7,8 @@ from rest_framework import filters
 #ObtainAuthToken is a Django view
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
+from rest_framework.permissions import IsAuthenticated
+
 
 from profiles_api import serializers
 from profiles_api import models
@@ -121,3 +123,17 @@ class UserLoginApiView(ObtainAuthToken):
     #Enables the django UI (?)
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handles creating, reading and updating profile feed item"""
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.ProfileFeedItemSerializer
+    queryset = models.ProfileFeedItem.objects.all()
+    #Users can only update statuses when user is authenticated
+    #IsAuthenticated ensures that the current ViewSet is not visible (feed endpoint)
+    #by the user unless is logged in
+    permission_classes = (permissions.UpdateOwnStatus, IsAuthenticated)
+
+    #Called in every Http POST (create is called)
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in user"""
+        serializer.save(user_profile=self.request.user)

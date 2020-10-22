@@ -8,6 +8,7 @@ router.register('hello-viewset', views.HelloViewSet, basename='hello-viewset')
 #We don't need to specify a basename attribute because we have declared (in UserProfileViewSet)
 #a queryset
 router.register('profile', views.UserProfileViewSet)
+router.register('feed', views.UserProfileFeedViewSet)
 
 #.as_view converts the HelloApiView to view
 urlpatterns = [
