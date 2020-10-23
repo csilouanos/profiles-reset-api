@@ -51,3 +51,16 @@ class ProfileFeedItemSerializer(serializers.ModelSerializer):
         #id, created_on are by default read-only
         fields = ('id', 'user_profile', 'status_text', 'created_on')
         extra_kwargs = {'user_profile': {'read_only': True}}
+
+class ProfileFeedItemLikeSerializer(serializers.ModelSerializer):
+    """Serializes profile feed items likes"""
+
+    class Meta:
+        model = models.ProfileFeedItemLike
+        fields = ('id', 'user_profile', 'feed_item', 'created_on')
+        #id, created_on are by default read-only
+        extra_kwargs = {
+            'user_profile': {'read_only': True},
+            'feed_item' : {'read_only', True}}
+
+

@@ -9,6 +9,7 @@ router.register('hello-viewset', views.HelloViewSet, basename='hello-viewset')
 #a queryset
 router.register('profile', views.UserProfileViewSet)
 router.register('feed', views.UserProfileFeedViewSet)
+router.register('likes', views.UserProfileFeedLikeViewSet)
 
 #.as_view converts the HelloApiView to view
 urlpatterns = [

@@ -72,3 +72,22 @@ class ProfileFeedItem(models.Model):
     def __str__(self):
         """Return the model as a string"""
         return self.status_text
+
+class ProfileFeedItemLike(models.Model):
+    """Like on profile update"""
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
+    feed_item = models.ForeignKey(
+        ProfileFeedItem,
+        on_delete=models.CASCADE
+    )
+
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return the model as a string"""
+        return self.created_on
+

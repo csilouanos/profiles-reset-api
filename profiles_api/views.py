@@ -137,3 +137,9 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Sets the user profile to the logged in user"""
         serializer.save(user_profile=self.request.user)
+
+class UserProfileFeedLikeViewSet(viewsets.ModelViewSet):
+    """Handles creating and deleting like item"""
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.ProfileFeedItemLikeSerializer
+    permission_classes = (IsAuthenticated)
