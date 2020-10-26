@@ -9,12 +9,13 @@ router.register('hello-viewset', views.HelloViewSet, basename='hello-viewset')
 #a queryset
 router.register('profile', views.UserProfileViewSet)
 router.register('feed', views.UserProfileFeedViewSet)
-router.register('likes', views.UserProfileFeedLikeViewSet)
+# router.register('feed/<int:pk>/likes', views.UserProfileFeedLikeViewSet)
 
 #.as_view converts the HelloApiView to view
 urlpatterns = [
     path('hello-view/',views.HelloApiView.as_view()),
     path('login/', views.UserLoginApiView.as_view()),
+    # path('feed/<int:pk>/likes/', views.UserProfileFeedLikeViewSet),
     #we don't want to include a prefix for this url
     path('', include(router.urls))
 ]

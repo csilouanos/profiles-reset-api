@@ -4,11 +4,12 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
+from rest_framework.decorators import action
+
 #ObtainAuthToken is a Django view
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from rest_framework.permissions import IsAuthenticated
-
 
 from profiles_api import serializers
 from profiles_api import models
@@ -133,13 +134,38 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
     #by the user unless is logged in
     permission_classes = (permissions.UpdateOwnStatus, IsAuthenticated)
 
+    likes = models.ProfileFeedItemLike.objects.all()
+
     #Called in every Http POST (create is called)
+    #Save the relation ship item (user_profile)
     def perform_create(self, serializer):
         """Sets the user profile to the logged in user"""
         serializer.save(user_profile=self.request.user)
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def likes(self, request, pk=None):
+        """Gets the likes"""
+        feed_item = self.get_object()
+        likes = feed_item.likes.all()
+        serializer = serializers.ProfileFeedItemLikeSerializer(likes)
+        return Response(serializer.data)
+
+    # @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated])
+    # def create_like(self, request):
+    #     """Creates a like"""
+    #     feed_item = self.get_object()
+
+
 
 class UserProfileFeedLikeViewSet(viewsets.ModelViewSet):
     """Handles creating and deleting like item"""
     authentication_classes = (TokenAuthentication,)
     serializer_class = serializers.ProfileFeedItemLikeSerializer
-    permission_classes = (IsAuthenticated)
+    queryset = models.ProfileFeedItem.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        """Sets the user profile to the model"""
+        serializer.save(user_profile=self.request.user)
+        # serializer.save()
+        

@@ -32,7 +32,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     #Overrides the default update function of the ModelSerializer
     #In the case of an update we pop the password from validated_data
-    #and assing it to instanct to save it as a has
+    #and assing it to the instance to save it as a hash
     def update(self, instance, validated_data):
         """Handle updating user account"""
         if 'password' in validated_data:
@@ -45,12 +45,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class ProfileFeedItemSerializer(serializers.ModelSerializer):
     """Serializes profile feed items"""
-
+    likes = serializers.StringRelatedField(many=True)
     class Meta:
         model = models.ProfileFeedItem
         #id, created_on are by default read-only
-        fields = ('id', 'user_profile', 'status_text', 'created_on')
+        fields = ('id', 'user_profile', 'status_text', 'created_on', 'likes')
         extra_kwargs = {'user_profile': {'read_only': True}}
+
 
 class ProfileFeedItemLikeSerializer(serializers.ModelSerializer):
     """Serializes profile feed items likes"""
@@ -61,6 +62,6 @@ class ProfileFeedItemLikeSerializer(serializers.ModelSerializer):
         #id, created_on are by default read-only
         extra_kwargs = {
             'user_profile': {'read_only': True},
-            'feed_item' : {'read_only', True}}
-
+            'feed_item' : {'read_only': True}
+        }
 

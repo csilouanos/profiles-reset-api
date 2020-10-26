@@ -82,6 +82,7 @@ class ProfileFeedItemLike(models.Model):
 
     feed_item = models.ForeignKey(
         ProfileFeedItem,
+        related_name='likes',
         on_delete=models.CASCADE
     )
 
